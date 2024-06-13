@@ -1,0 +1,32 @@
+{
+	"translate": {
+		"prompt_template": "Translate this to Spanish. Response Only with the Spanish sentence: {text}",
+		"model": "llama3:latest",
+		"max_tokens": 5000,
+		"temperature": 0.2
+},
+	"summary": {
+		"prompt_template": "Summary this text: {text}",
+		"model": "llama3:latest",
+		"max_tokens": 5000,
+		"temperature": 0.5
+	},
+	"explainCode": {
+		"prompt_template": "Explain the following code: {text}",
+		"model": "llama3:latest",
+		"max_tokens": 5000,
+		"temperature": 0.3
+	},
+	"polish": {
+		"prompt_template": "Check the following content for possible diction and grammar problems, and polish it carefully: {text}",
+		"model": "llama3:latest",
+		"max_tokens": 5000,
+		"temperature": 0.2
+	},
+	"anotherCoolAction": {
+		"prompt_template": "Do my job: {text}",
+		"model": "llama3:latest",
+		"max_tokens": 5000,
+		"temperature": 0.2
+	}
+}
