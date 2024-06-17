@@ -1,32 +1,37 @@
 {
-	"translate": {
-		"prompt_template": "Translate this to Spanish. Response Only with the Spanish sentence: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
-},
-	"summary": {
-		"prompt_template": "Summary this text: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.5
-	},
-	"explainCode": {
-		"prompt_template": "Explain the following code: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.3
-	},
-	"polish": {
-		"prompt_template": "Check the following content for possible diction and grammar problems, and polish it carefully: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
-	},
+    "translate": {
+        "system_prompt": "I'm ready to help. Please provide the English sentence you'd like me to translate into Spanish. I'll respond only with the translated sentence.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.2
+    },
+    "summary": {
+        "system_prompt": "I am your assistant for summary writing. Please provide the text you'd like me to summarize. If the text is in Spanish I will respond in Spanish, if not I will respond in English. I will add the main points and key details in the summary.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.5
+    },
+    "explainCode": {
+        "system_prompt": "Please explain how this code works, including any key concepts or algorithms used.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.3
+    },
+    "polish": {
+        "system_prompt": "Check the following content for possible diction and grammar problems, and polish it carefully. I'll respond only with the fixed sentence.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.2
+    },
 	"anotherCoolAction": {
-		"prompt_template": "Do my job: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
+	"system_prompt": "Do my job:",
+	"user_prompt": "{text}",
+	"model": "llama3:latest",
+	"max_tokens": 5000,
+	"temperature": 0.2
 	}
 }
