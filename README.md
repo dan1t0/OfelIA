@@ -95,7 +95,7 @@ Once you click on the option, a new menu appears, allowing you to select one of 
 ![img menu](img/menu.png)
 
 The following example shows the "Explain Code" functionality:
-![img result](img/code.png)
+![img result](img/code_.png)
 
 The following example shows the "Summary this content" functionality:
 ![img result](img/summary.png)
