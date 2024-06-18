@@ -37,41 +37,46 @@ Verify that Ollama is properly installed and running on your local machine at `h
 Edit the `config.json` file to specify the models and parameters for each action:
 ```json
 {
-	"translate": {
-		"prompt_template": "Translate this to Spanish. Response Only with the Spanish sentence: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
-},
-	"summary": {
-		"prompt_template": "Summary this text: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.5
-	},
-	"explainCode": {
-		"prompt_template": "Explain the following code: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.3
-	},
-	"polish": {
-		"prompt_template": "Check the following content for possible diction and grammar problems, and polish it carefully: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
-	},
+    "translate": {
+        "system_prompt": "I'm ready to help. Please provide the English sentence you'd like me to translate into Spanish. I'll respond only with the translated sentence.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.2
+    },
+    "summary": {
+        "system_prompt": "I am your assistant for summary writing. Please provide the text you'd like me to summarize. If the text is in Spanish I will respond in Spanish, if not I will respond in English. I will add the main points and key details in the summary.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.5
+    },
+    "explainCode": {
+        "system_prompt": "Please explain how this code works, including any key concepts or algorithms used.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.3
+    },
+    "polish": {
+        "system_prompt": "Check the following content for possible diction and grammar problems, and polish it carefully. I'll respond only with the fixed sentence.",
+        "user_prompt": "{text}",
+        "model": "llama3:latest",
+        "max_tokens": 5000,
+        "temperature": 0.2
+    },
 	"anotherCoolAction": {
-		"prompt_template": "Do my job: {text}",
-		"model": "llama3:latest",
-		"max_tokens": 5000,
-		"temperature": 0.2
+	"system_prompt": "Do my job:",
+	"user_prompt": "{text}",
+	"model": "llama3:latest",
+	"max_tokens": 5000,
+	"temperature": 0.2
 	}
 }
 ```
 
 2. **Python Script**
-Ensure that the python script (`ofelia.py`) is located in the same directory as the `confif.json` file.
+Ensure that the python script (`ofelia.py`) is located in the same directory as the `config.json` file.
 
 3. **Automator Script**
 * Open Automator.app and choose the wheel "Quick Action":
@@ -79,7 +84,7 @@ Ensure that the python script (`ofelia.py`) is located in the same directory as 
 
 * Select `Workflow receives current` "text" `in` "any application"
 * Drag or pick "Run AppleScript" (copy/paste the content of `ofelia.scpt`)
-* Save as a cool name for Example: "IA"
+* Save as a cool name for Example: "AI"
 ![AppleScript](img/AppleScript.png)
 
 ### Usage
@@ -89,8 +94,11 @@ Select any text within an application. Then, navigate to the 'Services' menu and
 Once you click on the option, a new menu appears, allowing you to select one of the actions or prompts that were previously configured in your `config.json` file.
 ![img menu](img/menu.png)
 
-Wait a bit, and a new popup appears with the output:
-![img result](img/result.png)
+The following example shows the "Explain Code" functionality:
+![img result](img/code.png)
+
+The following example shows the "Summary this content" functionality:
+![img result](img/summary.png)
 
 **Nice Tricks:**
 * Go to System Preferences > Keyboard > Shortcuts. Select Services from the sidebar and find your service. Add a shortcut by double clicking. Finally go to System Preferences > Security > Privacy > Accessibility and add Automator and the preferred app to run the shortcut.
