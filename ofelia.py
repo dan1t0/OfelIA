@@ -4,7 +4,8 @@ import json
 import os
 from pathlib import Path
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QTextEdit, QVBoxLayout, QWidget, QTextBrowser
+import markdown
 
 # Define the root directory of this script and the path to the configuration file
 ROOT_DIR = str(Path(__file__).parent)
@@ -19,26 +20,48 @@ class ResultWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        # Set up the window's title and text edit widget
+        # Set up the window's title and text browser widget
         self.setWindowTitle("OfelIA")
-        self.text_edit = QTextEdit(self)
-        self.text_edit.setReadOnly(True)
+        self.text_browser = QTextBrowser(self)
+        self.text_browser.setReadOnly(True)
+        self.text_browser.setOpenExternalLinks(True)  # Permitir enlaces clicables
 
         # Create a vertical layout for the window's widgets
         self.setGeometry(100, 100, 800, 600)
         layout = QVBoxLayout()
-        layout.addWidget(self.text_edit)
+        layout.addWidget(self.text_browser)
         self.setLayout(layout)
+        
+        # Initialize a variable to store the markdown text
+        self.markdown_text = ""
 
     def append_text(self, text):
         """
-        Append text to the text edit widget.
+        Append text to the text browser widget in markdown format.
         :param text: The text to be appended.
         """
-        current_text = self.text_edit.toPlainText()  # Get the content of the text edit widget
-        updated_text = current_text + text  # Concatenate the new text with the existing text
-        self.text_edit.setStyleSheet("font: 16pt")
-        self.text_edit.setPlainText(updated_text)  # Update the text edit widget with the new text
+        # Append the new markdown text
+        self.markdown_text += text
+        
+        # Convert the complete markdown text to HTML using markdown
+        html_content = markdown.markdown(self.markdown_text)
+        self.text_browser.setStyleSheet("font: 16pt")
+        #fix the output with Spanish characters
+        html_content = html_content.replace("Ã¡", "á")
+        html_content = html_content.replace("Ã©", "é")
+        html_content = html_content.replace("Ã­", "í")
+        html_content = html_content.replace("Ã³", "ó")
+        html_content = html_content.replace("Ãº", "ú")
+        html_content = html_content.replace("Ã±", "ñ")
+        html_content = html_content.replace("Ã¼", "ü")
+        html_content = html_content.replace("Ã‘", "Ñ")
+        html_content = html_content.replace("Ã±", "ñ")
+        html_content = html_content.replace("Â¿", "¿")
+        html_content = html_content.replace("Â¡", "¡")
+        html_content = html_content.replace("â¢", "*")    
+       
+        
+        self.text_browser.setHtml(html_content)  # Update the text browser widget with the new text
 
 
 class StreamThread(QThread):
