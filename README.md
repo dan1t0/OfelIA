@@ -10,6 +10,7 @@ OfelIA is an offline (an pretty simple) contextual assistant that integrates wit
 - **Completely offline operation:** No internet connection required, preserving user data privacy.
 - **Support for multiple language models:** Supports all models that Ollama supports, such as llama3:latest and phi3:latest.
 - **Flexible configuration:** Parameters like temperature, tokens, and specific prompts are managed via a JSON configuration file.
+- **Support output in MarkDown:** When the output is in MarkDown, OfelIA renders it.
 
 ### Requirements
 - macOS
@@ -95,7 +96,7 @@ Once you click on the option, a new menu appears, allowing you to select one of 
 ![img menu](img/menu.png)
 
 The following example shows the "Explain Code" functionality:
-![img result](img/code_.png)
+![img result](img/code.png)
 
 The following example shows the "Summary this content" functionality:
 ![img result](img/summary.png)
