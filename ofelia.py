@@ -10,6 +10,7 @@ import markdown
 # Define the root directory of this script and the path to the configuration file
 ROOT_DIR = str(Path(__file__).parent)
 CONFIG_PATH = os.path.join(ROOT_DIR, 'config.json')
+APIS = os.path.join(ROOT_DIR, 'apikey.json')
 
 
 class ResultWindow(QWidget):
@@ -49,16 +50,17 @@ class ResultWindow(QWidget):
         #fix the output with Spanish characters
         html_content = html_content.replace("Ã¡", "á")
         html_content = html_content.replace("Ã©", "é")
-        html_content = html_content.replace("Ã­", "í")
-        html_content = html_content.replace("Ã³", "ó")
-        html_content = html_content.replace("Ãº", "ú")
-        html_content = html_content.replace("Ã±", "ñ")
+        html_content = html_content.replace("Ã", "í")
+        html_content = html_content.replace("í³", "ó")
+        html_content = html_content.replace("íº", "ú")
+        html_content = html_content.replace("í±", "ñ")
         html_content = html_content.replace("Ã¼", "ü")
         html_content = html_content.replace("Ã‘", "Ñ")
         html_content = html_content.replace("Ã±", "ñ")
         html_content = html_content.replace("Â¿", "¿")
         html_content = html_content.replace("Â¡", "¡")
-        html_content = html_content.replace("â¢", "*")    
+        html_content = html_content.replace("â¢", "*")
+        html_content = html_content.replace("â¢", "'") 
        
         
         self.text_browser.setHtml(html_content)  # Update the text browser widget with the new text
@@ -70,13 +72,29 @@ class StreamThread(QThread):
     """
     new_text = pyqtSignal(str)
 
-    def __init__(self, url, payload):
+    def __init__(self, url, payload, apikeys, provider):
         super().__init__()
         self.url = url
         self.payload = payload
+        self.apikeys = apikeys
+        self.provider = provider
 
     def run(self):
-        response = requests.post(self.url, json=self.payload, stream=True)
+
+        # building the header
+        # if key is not "dummy" adding bearer to the header
+        if self.apikeys[self.provider]["key"] != "dummy":
+            headers = {
+                "Authorization": "Bearer " + self.apikeys[self.provider]["key"],
+                "Content-Type": "application/json"
+            }
+        else:
+            headers = {
+                "Content-Type": "application/json"
+            }
+
+        response = requests.post(self.url, json=self.payload, headers=headers, stream=True)
+
         if response.status_code == 200:
             buffer = ""
             for chunk in response.iter_lines(decode_unicode=True):
@@ -108,17 +126,27 @@ def main():
     # Load the configuration file
     with open(CONFIG_PATH, 'r') as f:
         config = json.load(f)
+    # Load API keys file
+    with open(APIS, 'r') as f:
+        apikeys = json.load(f)
 
     if action not in config:
         print(f"Error: Action '{action}' not found in configuration.")
         return
 
     action_config = config[action]
+    
 
     # Construct the URL and payload for sending a request to the chat completion API
-    url = "http://localhost:11434/v1/chat/completions"
+    path = "/v1/chat/completions"
+    #get provider from config
+    provider = action_config["provider"]
+    url = apikeys[provider]["url"] + path
+    
     system_prompt = action_config["system_prompt"].format(text=text)
     user_prompt = action_config["user_prompt"].format(text=text)
+
+
 
     payload = {
         "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
@@ -131,7 +159,7 @@ def main():
     app = QApplication(sys.argv)
     window = ResultWindow()
 
-    thread = StreamThread(url, payload)
+    thread = StreamThread(url, payload, apikeys, provider)
     thread.new_text.connect(window.append_text)
     thread.start()
 
