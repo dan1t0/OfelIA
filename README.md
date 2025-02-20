@@ -23,13 +23,13 @@ OfelIA is an offline (and pretty simple) contextual assistant that integrates wi
 
 1. **Clone the repository**
 ```sh
- git clone https://github.com/dan1t0/OfelIA
- cd OfelIA
+git clone https://github.com/dan1t0/OfelIA
+cd OfelIA
 ```
 
 2. **Install dependencies**
 ```sh
-pip install PyQt5 requests
+pip install PyQt5 requests --break-system-packages
 ```
 
 3. **Configure AI Providers**
@@ -107,10 +107,11 @@ If an API key is set to `null`, that provider will not be used.
 Ensure that the python script (`ofelia.py`) is located in the same directory as the `config.json` and `apikey.json` files.
 
 4. **Automator Script**
-* Open Automator.app and choose "Quick Action":
+* Open Automator.app, create "New Document" and choose "Quick Action":
 ![Automator](img/automator.png)
 * Select `Workflow receives current` "text" `in` "any application"
-* Drag or pick "Run AppleScript" (copy/paste the content of `ofelia.scpt`)
+* Pick the "Run AppleScript" action
+* Copy paste the content of `ofelia.scpt` and manually adjust the path to `ofelia.py`
 * Save as a cool name, for example: "AI"
 ![AppleScript](img/AppleScript.png)
 
