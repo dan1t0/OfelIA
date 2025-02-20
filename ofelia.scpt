@@ -1,4 +1,8 @@
 on run {input, parameters}
+	if input = {} or (input as string) = "" then
+		return -- Exit if no text is selected
+        end if
+
 	set theText to input as string
 	set userChoice to choose from list {"Translate this sentence", "Summary this content", "Explain Code", "Polish", "Improve Report"} with prompt "Choose an action:"
 	
