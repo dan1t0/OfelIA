@@ -23,7 +23,7 @@ OfelIA is an offline (and pretty simple) contextual assistant that integrates wi
 
 1. **Clone the repository**
 ```sh
- git clone [https://github.com/dan1t0/OfelIA](https://github.com/dan1t0/OfelIA)
+ git clone https://github.com/dan1t0/OfelIA
  cd OfelIA
 ```
 
