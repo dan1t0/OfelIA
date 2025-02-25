@@ -141,7 +141,7 @@ def main():
     path = "/v1/chat/completions"
     #get provider from config
     provider = action_config["provider"]
-    url = apikeys[provider]["url"] + path
+    url = apikeys[provider]["url"].rstrip("/") + path
     
     system_prompt = action_config["system_prompt"].format(text=text)
     user_prompt = action_config["user_prompt"].format(text=text)
