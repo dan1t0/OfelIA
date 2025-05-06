@@ -4,7 +4,8 @@ import json
 import os
 from pathlib import Path
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QTextEdit, QVBoxLayout, QWidget, QTextBrowser
+from PyQt5.QtWidgets import QApplication, QTextEdit, QVBoxLayout, QWidget, QTextBrowser, QPushButton, QHBoxLayout, QLabel, QSizePolicy
+from PyQt5.QtGui import QIcon
 import markdown
 
 # Define the root directory of this script and the path to the configuration file
@@ -23,16 +24,47 @@ class ResultWindow(QWidget):
 
         # Set up the window's title and text browser widget
         self.setWindowTitle("OfelIA")
+        self.setWindowIcon(QIcon.fromTheme("dialog-information"))  # Standard icon
+
+        layout = QVBoxLayout()
+
         self.text_browser = QTextBrowser(self)
         self.text_browser.setReadOnly(True)
-        self.text_browser.setOpenExternalLinks(True)  # Permitir enlaces clicables
-
-        # Create a vertical layout for the window's widgets
-        self.setGeometry(100, 100, 800, 600)
-        layout = QVBoxLayout()
+        self.text_browser.setOpenExternalLinks(True)
+        # Modern style for the text area
+        self.text_browser.setStyleSheet(
+            "background: #f5f5f7; color: #222; border-radius: 10px; border: 1px solid #bbb; padding: 16px; font: 15pt 'Menlo', 'Consolas', monospace;"
+        )
+        self.text_browser.setMinimumHeight(100)
+        self.text_browser.setMaximumHeight(600)
+        self.text_browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         layout.addWidget(self.text_browser)
+
+        # Add Copy and Close buttons in a horizontal layout
+        button_layout = QHBoxLayout()
+        self.send_button = QPushButton("Copy & Close", self)
+        self.send_button.clicked.connect(self.send_and_paste)
+        self.close_button = QPushButton("Close", self)
+        self.close_button.clicked.connect(self.close)
+        # Style for the buttons
+        button_style = (
+            "QPushButton { background-color: #0078d7; color: white; border-radius: 8px; padding: 8px 24px; font-size: 14px; }"
+            "QPushButton:hover { background-color: #005fa3; }"
+        )
+        self.send_button.setStyleSheet(button_style)
+        self.close_button.setStyleSheet(button_style.replace('#0078d7', '#888').replace('#005fa3', '#666'))
+        button_layout.addWidget(self.send_button)
+        button_layout.addWidget(self.close_button)
+        layout.addLayout(button_layout)
+
         self.setLayout(layout)
         
+        # Set initial, minimum, and maximum window size
+        self.setMinimumSize(400, 200)
+        self.resize(600, 350)
+        self.setMaximumSize(1200, 900)
+        # The window is resizable by the user
+
         # Initialize a variable to store the markdown text
         self.markdown_text = ""
 
@@ -47,7 +79,7 @@ class ResultWindow(QWidget):
         # Convert the complete markdown text to HTML using markdown
         html_content = markdown.markdown(self.markdown_text)
         self.text_browser.setStyleSheet("font: 16pt")
-        #fix the output with Spanish characters
+        # Fix the output with Spanish characters
         html_content = html_content.replace("Ã¡", "á")
         html_content = html_content.replace("Ã©", "é")
         html_content = html_content.replace("Ã", "í")
@@ -55,15 +87,34 @@ class ResultWindow(QWidget):
         html_content = html_content.replace("íº", "ú")
         html_content = html_content.replace("í±", "ñ")
         html_content = html_content.replace("Ã¼", "ü")
-        html_content = html_content.replace("Ã‘", "Ñ")
+        html_content = html_content.replace("Ã±", "ñ")
         html_content = html_content.replace("Ã±", "ñ")
         html_content = html_content.replace("Â¿", "¿")
         html_content = html_content.replace("Â¡", "¡")
         html_content = html_content.replace("â¢", "*")
         html_content = html_content.replace("â¢", "'") 
-       
         
         self.text_browser.setHtml(html_content)  # Update the text browser widget with the new text
+        # Adjust the window size to the content
+        self.adjustSize()
+
+    def keyPressEvent(self, event):
+        """
+        Close the window when Enter/Return is pressed.
+        """
+        from PyQt5.QtCore import Qt
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+            self.close()
+        else:
+            super().keyPressEvent(event)
+
+    def send_and_paste(self):
+        """
+        Copy the plain text to clipboard and close the window.
+        """
+        plain_text = self.text_browser.toPlainText()
+        QApplication.clipboard().setText(plain_text)
+        self.close()
 
 
 class StreamThread(QThread):
@@ -81,8 +132,8 @@ class StreamThread(QThread):
 
     def run(self):
 
-        # building the header
-        # if key is not "dummy" adding bearer to the header
+        # Build the header
+        # If key is not "dummy" add bearer to the header
         if self.apikeys[self.provider]["key"] != "dummy":
             headers = {
                 "Authorization": "Bearer " + self.apikeys[self.provider]["key"],
@@ -117,7 +168,7 @@ def main():
 
     # Check if the correct number of command-line arguments are provided
     if len(sys.argv) != 3:
-        print("Usage: ai.py <text> <action>")
+        print("Usage: ofelia.py <text> <action>")
         return
 
     text = sys.argv[1]
@@ -139,7 +190,7 @@ def main():
 
     # Construct the URL and payload for sending a request to the chat completion API
     path = "/v1/chat/completions"
-    #get provider from config
+    # Get provider from config
     provider = action_config["provider"]
     url = apikeys[provider]["url"].rstrip("/") + path
     

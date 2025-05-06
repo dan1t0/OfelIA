@@ -1,0 +1,14 @@
+{
+    "mistral": {
+        "url" : "https://api.mistral.ai/",
+        "key": "qwerty"
+    },
+    "ollama": {
+        "url" : "http://localhost:11434/",
+        "key": "dummy"
+    },
+    "claude": {
+        "url" : "https://api.anthropic.com/",
+        "key": null
+    }
+}
