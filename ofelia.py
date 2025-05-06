@@ -42,7 +42,7 @@ class ResultWindow(QWidget):
 
         # Add Copy and Close buttons in a horizontal layout
         button_layout = QHBoxLayout()
-        self.send_button = QPushButton("Copy & Close", self)
+        self.send_button = QPushButton("Copy && Close", self)
         self.send_button.clicked.connect(self.send_and_paste)
         self.close_button = QPushButton("Close", self)
         self.close_button.clicked.connect(self.close)
