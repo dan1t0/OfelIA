@@ -29,11 +29,13 @@ cd OfelIA
 
 2. **Install dependencies**
 ```sh
-pip install PyQt5 requests --break-system-packages
+pip install PyQt5 requests
 ```
 
 3. **Configure AI Providers**
-OfelIA allows using both local (Ollama) and external AI models. Configuration is done via `config.json` and `apikey.json`.
+OfelIA allows the use of both local (Ollama) and external AI models.
+Configuration is done via `config.json` and `apikey.json`.
+Ensure you rename `config.json` to `config.json.sample` and `apikey.json.sample` to `apikey.json` with your specific configuration
 
 #### Configuration
 
